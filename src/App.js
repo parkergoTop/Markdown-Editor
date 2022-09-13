@@ -6,20 +6,35 @@ import Split from "react-split"
 import {nanoid} from "nanoid"
 import './style.css'
 
-/**
- * Challenge: Spend 10-20+ minutes reading through the code
- * and trying to understand how it's currently working. Spend
- * as much time as you need to feel confident that you 
- * understand the existing code (although you don't need
- * to fully understand everything to move on)
- */
-
 export default function App() {
-    const [notes, setNotes] = React.useState([])
+    /*
+     Every time the `notes` array changes, save it 
+     *    in localStorage. You'll need to use JSON.stringify()
+     *    to turn the array into a string to save in localStorage.
+    */
+    const [notes, setNotes] = React.useState(() => JSON.parse(localStorage.getItem("notes"))||[])
+    // above use lazy state mode, it will not re-render after it has been inialized 
     const [currentNoteId, setCurrentNoteId] = React.useState(
         (notes[0] && notes[0].id) || ""
     )
-    
+
+
+    /*
+     *    When the app first loads, initialize the notes state
+     *    with the notes saved in localStorage. You'll need to
+     *    use JSON.parse() to turn the stringified array back
+     *    into a real JS array.
+     * 
+     *  useEffect() will run first before doms are loaded, so it will first check [notes] state
+     * as notes were stored in the local storage, 
+     * if [notes] has some content, as useEffect just loaded/used first time
+     * the previous notes just loaded is empty, it will automatically run the function in the first parameter
+     *
+    */
+     React.useEffect(() => {
+        localStorage.setItem("notes", JSON.stringify(notes))
+     }, [notes])
+
     function createNewNote() {
         const newNote = {
             id: nanoid(),
@@ -27,6 +42,7 @@ export default function App() {
         }
         setNotes(prevNotes => [newNote, ...prevNotes])
         setCurrentNoteId(newNote.id)
+       
     }
     
     function updateNote(text) {
