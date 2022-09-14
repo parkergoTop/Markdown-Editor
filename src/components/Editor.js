@@ -1,7 +1,8 @@
+import "../style.css"
 import React from "react"
 import ReactMde from "react-mde"
 import Showdown from "showdown"
-import "../style.css"
+
 
 export default function Editor({ currentNote, updateNote }) {
     const [selectedTab, setSelectedTab] = React.useState("write")
